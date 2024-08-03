@@ -5,15 +5,19 @@ import (
 	"github.com/patja60/realtime-chat-server/pkg/auth"
 )
 
-type Repository struct {
+type AuthRepository interface {
+	Signup(email, password string) error
+}
+
+type authRepositoryImpl struct {
 	db *database.DB
 }
 
-func NewRepository(db *database.DB) *Repository {
-	return &Repository{db: db}
+func NewRepository(db *database.DB) AuthRepository {
+	return &authRepositoryImpl{db: db}
 }
 
-func (r *Repository) Signup(email, password string) error {
+func (r *authRepositoryImpl) Signup(email, password string) error {
 	hashedPassword, err := auth.HashPassword(password)
 	if err != nil {
 		return err
