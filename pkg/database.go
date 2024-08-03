@@ -3,7 +3,7 @@ package database
 import "database/sql"
 
 type DB struct {
-	conn *sql.DB
+	Conn *sql.DB
 }
 
 func New() (*DB, error) {
@@ -17,10 +17,5 @@ func New() (*DB, error) {
 		return nil, err
 	}
 
-	return &DB{conn: db}, nil
-}
-
-func (db *DB) CreateUser(email, passwordHash string) error {
-	_, err := db.conn.Exec("INSERT INTO users(email, passwordHash) VALUES ($1, $2)", email, passwordHash)
-	return err
+	return &DB{Conn: db}, nil
 }
