@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,7 +13,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWTToken(userID string) (*string, error) {
+func GenerateJWTToken(userID string) (string, error) {
 
 	claims := Claims{
 		userID,
@@ -24,11 +23,6 @@ func GenerateJWTToken(userID string) (*string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedString, err := token.SignedString(jwtKey)
 
-	if err != nil {
-		return nil, errors.New("unexpected signing key")
-	}
-
-	return &signedString, nil
+	return token.SignedString(jwtKey)
 }
