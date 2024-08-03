@@ -20,11 +20,13 @@ func main() {
 	fmt.Println("Hello, World!")
 	// init db
 
-	// init service
+	// init repo -> use db
 
-	// init handler -> inject service
+	// init usecase -> inject repo
 
-	// init router -> inject handler
+	// init handler -> inject usecase
+
+	// init router -> use handler
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", HelloWorldHandler)
