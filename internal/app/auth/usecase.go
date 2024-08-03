@@ -1,9 +1,19 @@
 package auth
 
-import "github.com/patja60/realtime-chat-server/pkg/auth"
+import (
+	"errors"
+
+	"github.com/patja60/realtime-chat-server/pkg/auth"
+)
+
+type SigninUsecaseDTO struct {
+	Token  string
+	UserID string
+}
 
 type AuthUsecase interface {
 	Signup(email, password string) error
+	Signin(email, password string) (string, error)
 }
 
 type authUsecaseImpl struct {
@@ -20,5 +30,27 @@ func (u *authUsecaseImpl) Signup(email, password string) error {
 		return err
 	}
 
-	return u.authRepo.Signup(email, hashedPassword)
+	return u.authRepo.CreateUser(email, hashedPassword)
+}
+
+func (u *authUsecaseImpl) Signin(email, password string) (string, error) {
+	// get user from user repo
+	user, err := u.authRepo.GetUserByEmail(email)
+	if err != nil {
+		return "", err
+	}
+
+	// compare password
+	isMatch := auth.CompareHashAndPassword(password, user.PasswordHash)
+	if !isMatch {
+		return "", errors.New("password not match")
+	}
+
+	// create token
+	token, err := auth.GenerateJWTToken(user.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
