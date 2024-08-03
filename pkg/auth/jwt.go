@@ -14,7 +14,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID string) (*string, error) {
+func GenerateJWTToken(userID string) (*string, error) {
 
 	claims := Claims{
 		userID,
