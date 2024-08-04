@@ -34,44 +34,42 @@ func (m *mockAuthRepository) GetUserByEmail(email string) (*User, error) {
 }
 
 func TestAuthUsecase_Signup(t *testing.T) {
-	t.Run("SignupSuccess", func(t *testing.T) {
-		repo := &mockAuthRepository{users: make(map[string]*User)}
-		usecase := NewAuthUsecase(repo)
+	repo := &mockAuthRepository{users: make(map[string]*User)}
+	usecase := NewAuthUsecase(repo)
 
-		t.Run("Should have 1 user after signup", func(t *testing.T) {
-			email := "user@example.com"
-			err := usecase.Signup(email, "password123")
-			if err != nil {
-				t.Fatalf("Expected no error, got %v", err)
-			}
+	t.Run("SuccessSignup", func(t *testing.T) {
+		email := "user@example.com"
+		err := usecase.Signup(email, "password123")
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
 
-			if repo.users[email] == nil {
-				t.Fatalf("Expected user to be created, got error: %v", err)
-			}
+		if repo.users[email] == nil {
+			t.Fatalf("Expected user to be created, got error: %v", err)
+		}
 
-			if len(repo.users) != 1 {
-				t.Fatalf("Expected to have 1 user to be created, got error: %v", err)
-			}
-		})
-
-		t.Run("DuplicateSignup", func(t *testing.T) {
-			email := "user@example.com"
-			_ = usecase.Signup(email, "password123")
-			err := usecase.Signup(email, "password123")
-			if err == nil {
-				t.Fatalf("Expected error for duplicate signup, got nil")
-			}
-
-			if len(repo.users) != 1 {
-				t.Fatalf("Expected to have 1 user to be created, got error: %v", err)
-			}
-		})
-
+		if len(repo.users) != 1 {
+			t.Fatalf("Expected to have 1 user to be created, got error: %v", err)
+		}
 	})
+
+	t.Run("DuplicateSignup", func(t *testing.T) {
+		email := "user@example.com"
+		_ = usecase.Signup(email, "password123")
+		err := usecase.Signup(email, "password123")
+		if err == nil {
+			t.Fatalf("Expected error for duplicate registration, got nil")
+		}
+
+		if len(repo.users) != 1 {
+			t.Fatalf("Expected to have 1 user to be created, got error: %v", err)
+		}
+	})
+
 }
 
 func TestAuthUsecase_Signin(t *testing.T) {
-	t.Run("ValidSignin", func(t *testing.T) {
+	t.Run("SuccessSignin", func(t *testing.T) {
 		repo := &mockAuthRepository{users: make(map[string]*User)}
 		usecase := NewAuthUsecase(repo)
 

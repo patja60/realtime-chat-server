@@ -11,7 +11,7 @@ type authRepositoryImpl struct {
 	db *database.DB
 }
 
-func NewRepository(db *database.DB) AuthRepository {
+func NewAuthRepository(db *database.DB) AuthRepository {
 	return &authRepositoryImpl{db: db}
 }
 
