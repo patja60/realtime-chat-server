@@ -3,6 +3,10 @@ package auth
 import (
 	"errors"
 	"testing"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/patja60/realtime-chat-server/pkg/auth"
 )
 
 type mockAuthRepository struct {
@@ -63,5 +67,44 @@ func TestAuthUsecase_Signup(t *testing.T) {
 			}
 		})
 
+	})
+}
+
+func TestAuthUsecase_Signin(t *testing.T) {
+	t.Run("ValidSignin", func(t *testing.T) {
+		repo := &mockAuthRepository{users: make(map[string]*User)}
+		usecase := NewAuthUsecase(repo)
+
+		email := "user@example.com"
+		password := "password123"
+		err := usecase.Signup(email, password)
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		tokenString, err := usecase.Signin(email, password)
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		claims := &auth.Claims{}
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+			return auth.JwtKey, nil
+		})
+
+		t.Run("Should get correct token string", func(t *testing.T) {
+
+			if !token.Valid {
+				t.Fatalf("Expected no error, got %v", err)
+			}
+
+			if claims.UserID != "" {
+				t.Fatalf("Expected userID to be not empty")
+			}
+
+			if claims.ExpiresAt.Unix() <= time.Now().Unix() {
+				t.Fatalf("Expected token to have a future expiration time")
+			}
+		})
 	})
 }
