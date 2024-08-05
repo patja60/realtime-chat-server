@@ -1,6 +1,6 @@
 module github.com/patja60/realtime-chat-server
 
-go 1.22.5
+go 1.22
 
 require golang.org/x/crypto v0.25.0
 

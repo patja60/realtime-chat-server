@@ -1,6 +1,10 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/lib/pq" // Import the PostgreSQL driver
+)
 
 type DB struct {
 	Conn *sql.DB
