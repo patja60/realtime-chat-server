@@ -4,6 +4,10 @@
 BINARY_NAME=main
 DOCKER_COMPOSE=compose
 BUILD_DIR=./cmd/realtime-chat-server
+DB_URL=postgres://postgres:password@db:5432/mydb?sslmode=disable
+
+# Default migration directory
+MIGRATION_DIR=./migrations
 
 # Default target: run all tests
 test:
@@ -38,7 +42,15 @@ docker-run:
 # Run the server using Docker Compose
 docker-run-dependency:
 	@echo "Running the dependency with Docker Compose..."
-	docker $(DOCKER_COMPOSE) up --build --scale app=0
+	docker $(DOCKER_COMPOSE) up --build app db redis
+
+run-migrate:
+	@echo "Running migrate with action: $(ACTION) and version: $(VERSION)"
+	docker $(DOCKER_COMPOSE) run migrate -path $(MIGRATION_DIR) -database "$(DB_URL)" $(ACTION) $(VERSION)
+
+# Helper to pass arguments to run-migrate
+migrate:
+	@$(MAKE) run-migrate ACTION=$(action) VERSION=$(version)
 
 # Clean up binaries and Docker containers
 clean:
