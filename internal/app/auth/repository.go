@@ -8,10 +8,10 @@ type AuthRepository interface {
 }
 
 type authRepositoryImpl struct {
-	db *database.DB
+	db database.DB
 }
 
-func NewAuthRepository(db *database.DB) AuthRepository {
+func NewAuthRepository(db database.DB) AuthRepository {
 	return &authRepositoryImpl{db: db}
 }
 

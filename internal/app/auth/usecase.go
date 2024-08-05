@@ -14,6 +14,7 @@ type SigninUsecaseDTO struct {
 type AuthUsecase interface {
 	Signup(email, password string) error
 	Signin(email, password string) (string, error)
+	// Signout(userID string) error
 }
 
 type authUsecaseImpl struct {

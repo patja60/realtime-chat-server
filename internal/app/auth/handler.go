@@ -5,12 +5,17 @@ import (
 	"net/http"
 )
 
-type AuthHandler struct {
+type AuthHandler interface {
+	Signup(w http.ResponseWriter, r *http.Request)
+	Signin(w http.ResponseWriter, r *http.Request)
+}
+
+type authHandlerImpl struct {
 	authUsecase AuthUsecase
 }
 
-func NewHandler(authUsecase AuthUsecase) *AuthHandler {
-	return &AuthHandler{
+func NewAuthHandler(authUsecase AuthUsecase) AuthHandler {
+	return &authHandlerImpl{
 		authUsecase: authUsecase,
 	}
 }
@@ -25,7 +30,7 @@ type SigninRequest struct {
 	Password string `json:"password"`
 }
 
-func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
+func (h *authHandlerImpl) Signup(w http.ResponseWriter, r *http.Request) {
 	var req SignupRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
@@ -43,7 +48,7 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (h *AuthHandler) Signin(w http.ResponseWriter, r *http.Request) {
+func (h *authHandlerImpl) Signin(w http.ResponseWriter, r *http.Request) {
 	var req SigninRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)

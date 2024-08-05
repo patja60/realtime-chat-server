@@ -17,7 +17,7 @@ func TestCreateUser(t *testing.T) {
 		}
 		defer sqlDB.Close()
 
-		db := &database.DB{Conn: sqlDB}
+		db := database.DB{Conn: sqlDB}
 
 		repo := NewAuthRepository(db)
 
@@ -48,7 +48,7 @@ func GetUserByEmail(t *testing.T) {
 		}
 		defer sqlDB.Close()
 
-		db := &database.DB{Conn: sqlDB}
+		db := database.DB{Conn: sqlDB}
 
 		repo := NewAuthRepository(db)
 
@@ -84,7 +84,7 @@ func GetUserByEmail(t *testing.T) {
 		}
 		defer sqlDB.Close()
 
-		db := &database.DB{Conn: sqlDB}
+		db := database.DB{Conn: sqlDB}
 
 		repo := NewAuthRepository(db)
 
