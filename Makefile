@@ -42,7 +42,7 @@ docker-run:
 # Run the server using Docker Compose
 docker-run-dependency:
 	@echo "Running the dependency with Docker Compose..."
-	docker $(DOCKER_COMPOSE) up --build app db redis
+	docker $(DOCKER_COMPOSE) up --build db redis
 
 run-migrate:
 	@echo "Running migrate with action: $(ACTION) and version: $(VERSION)"
